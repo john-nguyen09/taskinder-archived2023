@@ -1,18 +1,26 @@
 <template>
-    <div class="container mt-3">
+    <div class="container-fluid mt-3">
         <div class="card mb-4">
             <div class="card-body">
-                <h1 class="card-title">Dashboard</h1>
-                <p class="card-text">Hello, Welcome to your SPA dashboard</p>
+                <task-log-form />
+            </div>
+        </div>
+        <div class="card mb-4">
+            <div class="card-body">
+                <task-log-list />
             </div>
         </div>
     </div>
 </template>
 
 <script>
+import TaskLogForm from './task_log_form';
+import TaskLogList from './task_log_list';
+
 export default {
-    data() {
-        return {};
-    }
+    components: {
+        TaskLogForm,
+        TaskLogList,
+    },
 };
 </script>

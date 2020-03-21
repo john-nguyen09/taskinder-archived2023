@@ -15,7 +15,7 @@ const getters = {
 }
 
 const actions = {
-    authRequest: ({ commit, dispatch }, payload) => {
+    async authRequest({ commit, dispatch }, payload) {
         let actionUrl = '/login';
         let remember = payload.remember ? payload.remember : false;
         let data = {
@@ -42,43 +42,34 @@ const actions = {
             }
         }
 
-        return new Promise((resolve, reject) => {
-            commit('authRequest');
-            axios.post(actionUrl, data)
-                .then((resp) => {
-                    if (!resp.data.access_token) {
-                        commit('authError', {});
-                        return reject(`Unknown error`);
-                    }
-
-                    let access_token = 'Bearer ' + resp.data.access_token;
-                    Cookies.set('access_token', access_token, { expires: remember ? 365 : 1 });
-                    axios.defaults.headers.common['Authorization'] = access_token;
-
-                    commit('authSuccess', access_token);
-                    dispatch('userRequest');
-                    resolve(access_token);
-                })
-                .catch((err) => {
-                    commit('authError', err.response.data);
-                    Cookies.remove('access_token');
-                    reject(err);
-                })
-        })
-    },
-    authLogout: ({ commit, dispatch }) => {
-        Cookies.remove('access_token');
-        return new Promise((resolve, reject) => {
-            axios.post('/logout')
-                .then((resp) => {
-                    commit('authLogout');
-                    resolve();
-                })
-                .catch((err) => {
-                    commit('authError', err.response.data);
-                    reject(err);
+        commit('authRequest');
+        try {
+            const resp = await axios.post(actionUrl, data);
+            if (!resp.data.access_token) {
+                commit('authError', {
+                    errors: ['Unknown error'],
                 });
-        })
+                return;
+            }
+            const accessToken = `Bearer ${resp.data.access_token}`;
+            Cookies.set('access_token', accessToken, { expires: remember ? 365 : 1 });
+            axios.defaults.headers.common['Authorization'] = accessToken;
+            commit('authSuccess', accessToken);
+            dispatch('userRequest');
+            return accessToken;
+        } catch (err) {
+            commit('authError', err.response.data);
+            Cookies.remove('access_token');
+        }
+    },
+    async authLogout({ commit }) {
+        Cookies.remove('access_token');
+        try {
+            await axios.post('/logout');
+            commit('authLogout');
+        } catch (err) {
+            commit('authError', err.response.data);
+        }
     }
 }
 
@@ -96,6 +87,7 @@ const mutations = {
         if (err.error == "invalid_grant") {
             errors.invalid_credentials = ['The user credentials were incorrect.'];
         }
+        console.log(err);
 
         state.status = 'error';
         state.hasLoadedOnce = true;

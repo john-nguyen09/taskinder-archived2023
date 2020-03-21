@@ -4,5 +4,31 @@
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
+// FontAwesome
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/solid';
+
 // Sign In Form
 @import "signin";
+
+.btn-confirm-delete {
+    &.to-confirm {
+        .delete-text {
+            max-width: 7rem;
+        }
+    }
+    .delete-text {
+        &:before {
+            content: "";
+            width: 0px;
+            display: inline-block;
+        }
+        max-width: 0;
+        width: auto;
+        transition: max-width 0.5s ease-in-out;
+        display: inline-block;
+        overflow: hidden;
+        white-space: nowrap;
+        line-height: 0.7rem;
+    }
+}

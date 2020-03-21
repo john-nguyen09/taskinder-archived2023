@@ -8,11 +8,13 @@ require('./bootstrap');
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import VCalendar from 'v-calendar';
 
 import { routes } from './router/routes';
 import { store } from './vuex/store';
 
 Vue.use(VueRouter);
+Vue.use(VCalendar);
 
 const router = new VueRouter({
     routes,

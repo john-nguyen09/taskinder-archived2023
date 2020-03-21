@@ -11,17 +11,15 @@ const getters = {
 }
 
 const actions = {
-    userRequest: ({commit, dispatch}) => {
-        commit('userRequest')
-        axios.get('/api/user')
-            .then((resp) => {
-                commit('userSuccess', resp.data);
-            })
-            .catch((err) => {
-                commit('userError');
-                // if resp is unauthorized, logout, to
-                dispatch('authLogout')
-            })
+    async userRequest({commit, dispatch}) {
+        commit('userRequest');
+        try {
+            const resp = await axios.get('/api/user');
+            commit('userSuccess', resp.data);
+        } catch (err) {
+            commit('userError');
+            dispatch('authLogout');
+        }
     },
 }
 

@@ -21,3 +21,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::middleware('auth:api')->get('/users', function (Request $request) {
     return response()->json(['name' => $request->user()->fullName]);
 });
+
+Route::group(['middleware' => 'auth:api'], function() {
+    Route::get('/taskLog', 'TaskLogController@list');
+    Route::post('/taskLog/save', 'TaskLogController@store');
+    Route::delete('/taskLog/delete', 'TaskLogController@delete');
+});
