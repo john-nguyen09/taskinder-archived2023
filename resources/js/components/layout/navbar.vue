@@ -2,7 +2,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <a class="navbar-brand" href="#">
             <img src="img/vue.svg" width="30" height="30" class="d-inline-block align-top" alt />
-            SSL Checker
+            Taskinder
         </a>
         <button
             class="navbar-toggler"
