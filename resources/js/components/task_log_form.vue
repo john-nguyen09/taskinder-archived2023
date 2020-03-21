@@ -48,7 +48,6 @@ export default {
             },
         },
         errors() {
-            console.log(this.$store.getters.taskLogErrors.has('date'));
             return this.$store.getters.taskLogErrors;
         },
     },
