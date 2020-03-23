@@ -4,6 +4,7 @@
         :value="value"
         @input="$emit('input', $event)"
         :popover="{ visibility: 'click' }"
+        :attributes="attributes"
     >
         <input
             type="text"
@@ -21,7 +22,8 @@ import { format } from 'date-fns';
 
 export default {
     props: [
-        'placeholder', 'value', 'isInvalid'
+        'placeholder', 'value', 'isInvalid',
+        'attributes'
     ],
     computed: {
         formattedDate() {

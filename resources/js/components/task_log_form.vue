@@ -5,7 +5,7 @@
                 <textarea class="form-control" :class="{ 'is-invalid': errors.has('description') }" placeholder="Description" v-model="description"></textarea>
             </div>
             <div class="col-auto">
-                <date-picker placeholder="Date" :isInvalid="errors.has('date')" v-model="date"></date-picker>
+                <date-picker placeholder="Date" :isInvalid="errors.has('date')" v-model="date" :attributes="attrs"></date-picker>
             </div>
             <div class="col-auto">
                 <input type="text" class="form-control" :class="{ 'is-invalid': errors.has('duration') }" placeholder="Duration" v-model="formattedDuration" />
@@ -50,6 +50,17 @@ export default {
         errors() {
             return this.$store.getters.taskLogErrors;
         },
+    },
+    data() {
+        return {
+            attrs: [
+                {
+                    key: 'today',
+                    highlight: 'purple',
+                    dates: new Date(),
+                },
+            ],
+        }
     },
     methods: {
         saveTaskLogForm() {
