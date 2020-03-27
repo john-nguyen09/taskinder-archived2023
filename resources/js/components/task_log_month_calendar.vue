@@ -5,6 +5,7 @@
                 is-expanded
                 :attributes="monthResults"
                 @dayclick="selectDate"
+                @update:from-page="pageChange"
             ></v-calendar>
         </div>
         <div class="col-4">
@@ -28,12 +29,14 @@ export default {
         ]),
     },
     mounted() {
-        this.$store.dispatch('fetchMonthResults');
         this.$store.dispatch('fetchDateInfo', format(new Date(), 'yyyy-MM-dd'));
     },
     methods: {
         selectDate(day) {
             this.$store.dispatch('fetchDateInfo', day.id);
+        },
+        pageChange(page) {
+            this.$store.dispatch('changeMonth', page);
         },
         formatDate(date) {
             return format(new Date(date), 'dd/MM');

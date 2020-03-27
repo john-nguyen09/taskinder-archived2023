@@ -1,11 +1,20 @@
 import Errors from '../../modules/errors';
 import { toText } from '../../modules/timeParser';
-import { format } from "date-fns";
+
+const INITIAL_MONTH = {
+    highlight: {
+        fillMode: 'light',
+        color: 'red',
+    },
+    dates: new Date(),
+};
 
 const state = {
     isLoading: false,
     currentMonth: new Date(),
-    monthResults: [],
+    monthResults: [
+        INITIAL_MONTH,
+    ],
     selectedDateInfo: [],
     errors: new Errors(),
 };
@@ -37,6 +46,13 @@ const actions = {
         }
         commit('isLoading', false);
     },
+    async changeMonth({commit, dispatch}, payload) {
+        const date = new Date();
+        date.setMonth(payload.month - 1);
+        date.setFullYear(payload.year);
+        commit('currentMonth', date);
+        await dispatch('fetchMonthResults');
+    },
 };
 
 const mutations = {
@@ -44,7 +60,9 @@ const mutations = {
         state.isLoading = payload;
     },
     monthResults(state, payload) {
-        state.monthResults = [];
+        state.monthResults = [
+            INITIAL_MONTH,
+        ];
         state.selectedDateInfo = [];
         const loggedDays = {
             dot: 'green',
@@ -64,6 +82,9 @@ const mutations = {
     },
     selectedDateInfo(state, payload) {
         state.selectedDateInfo = payload;
+    },
+    currentMonth(state, payload) {
+        state.currentMonth = payload;
     },
     errors(state, payload) {
         if (payload.response) {
