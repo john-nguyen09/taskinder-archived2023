@@ -40,4 +40,9 @@ class User extends Authenticatable
     {
         return $this->where('username', $username)->first();
     }
+
+    public function taskLogs()
+    {
+        return $this->hasMany(TaskLog::class);
+    }
 }

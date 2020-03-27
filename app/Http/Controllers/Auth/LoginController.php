@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\DB;
+use Laravel\Passport\Passport;
 
 class LoginController extends Controller
 {
@@ -13,6 +14,7 @@ class LoginController extends Controller
     {
         $this->validate($request, $this->rules(), $this->validationErrorMessages());
 
+        Passport::tokensExpireIn(now()->addHours(4));
         $request = Request::create('/oauth/token', 'POST', [
             'grant_type' => 'password',
             'client_id' => config('services.vue_client.id'),

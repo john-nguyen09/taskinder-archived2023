@@ -3,11 +3,12 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Support\TimeLog;
 
 class TaskLog extends Model
 {
     protected $fillable = [
-        'description', 'date', 'duration'
+        'description', 'date', 'duration', 'user_id',
     ];
 
     protected $casts = [
@@ -16,9 +17,11 @@ class TaskLog extends Model
 
     protected function getDurationAttribute()
     {
-        return [
-            'hours' => floor($this->attributes['duration'] / 60),
-            'minutes' => $this->attributes['duration'] % 60,
-        ];
+        return new TimeLog($this->attributes['duration']);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }

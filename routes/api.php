@@ -26,4 +26,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::get('/taskLog', 'TaskLogController@list');
     Route::post('/taskLog/save', 'TaskLogController@store');
     Route::delete('/taskLog/delete', 'TaskLogController@delete');
+
+    Route::get('/taskLog/monthCalendar/{month}', 'TaskLogController@monthCalendar');
+    Route::get('/taskLog/dateInfo/{date}', 'TaskLogController@dateInfo');
 });

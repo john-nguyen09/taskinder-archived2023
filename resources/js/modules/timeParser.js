@@ -18,6 +18,12 @@ export function toSeconds(text) {
 }
 
 export function toText(result) {
+    if (result.minutes === 0) {
+        return `${result.hours}h`;
+    }
+    if (result.hours === 0) {
+        return `${result.minutes}m`;
+    }
     return `${result.hours}h ${result.minutes}m`;
 }
 

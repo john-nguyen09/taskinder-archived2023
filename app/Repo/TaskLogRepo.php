@@ -3,6 +3,8 @@
 namespace App\Repo;
 
 use App\TaskLog;
+use Illuminate\Support\Carbon;
+use App\User;
 
 class TaskLogRepo
 {
@@ -24,8 +26,35 @@ class TaskLogRepo
         return TaskLog::find($id);
     }
 
-    public function list()
+    public function list(User $user)
     {
-        return TaskLog::all();
+        return $user->taskLogs;
+    }
+
+    /**
+     * @param Carbon $date
+     */
+    public function getMonthTaskLogs($date)
+    {
+        $begin = (clone $date)
+            ->modify('first day of this month')
+            ->setTime(0, 0, 0);
+        $end = (clone $date)
+            ->modify('last day of this month')
+            ->setTime(23, 59, 59);
+
+        return TaskLog::where('date', '>=', $begin)
+            ->where('date', '<=', $end)
+            ->get();
+    }
+
+    public function getDateInfo(Carbon $date)
+    {
+        $begin = (clone $date)->setTime(0, 0, 0);
+        $end = (clone $date)->setTime(23, 59, 59);
+
+        return TaskLog::where('date', '>=', $begin)
+            ->where('date', '<=', $end)
+            ->get();
     }
 }

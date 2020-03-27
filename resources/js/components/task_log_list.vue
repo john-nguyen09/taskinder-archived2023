@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { toText } from '../modules/timeParser';
+
 export default {
     computed: {
         taskLogs() {
@@ -36,7 +38,7 @@ export default {
             for (const taskLog of this.$store.getters.taskLogs) {
                 taskLogs.push({
                     ...taskLog,
-                    duration: `${taskLog.duration.hours}h ${taskLog.duration.minutes}m`,
+                    duration: toText(taskLog.duration),
                 });
             }
             return taskLogs;

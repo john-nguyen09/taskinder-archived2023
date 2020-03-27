@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Repo\TaskLogRepo;
 use App\Http\Requests\CreateTaskLog;
 use App\Http\Requests\DeleteTaskLog;
+use App\UseCase\MonthCalendarUseCase;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Carbon;
 
 class TaskLogController extends Controller
 {
@@ -13,14 +16,22 @@ class TaskLogController extends Controller
      */
     private $taskLogRepo;
 
-    public function __construct(TaskLogRepo $taskLogRepo)
-    {
+    /**
+     * @var MonthCalendarUseCase
+     */
+    private $useCase;
+
+    public function __construct(
+        TaskLogRepo $taskLogRepo,
+        MonthCalendarUseCase $useCase
+    ) {
         $this->taskLogRepo = $taskLogRepo;
+        $this->useCase = $useCase;
     }
 
     public function list()
     {
-        return $this->taskLogRepo->list();
+        return $this->taskLogRepo->list(Auth::user());
     }
 
     public function view($id)
@@ -36,6 +47,7 @@ class TaskLogController extends Controller
             $taskLog->fill($data);
             $taskLog->save();
         } else {
+            $data['user_id'] = Auth::user()->id;
             $taskLog = $this->taskLogRepo->create($data);
         }
         return $taskLog;
@@ -49,5 +61,16 @@ class TaskLogController extends Controller
         return [
             'status' => 'deleted',
         ];
+    }
+
+    public function monthCalendar($month)
+    {
+        return $this->useCase->monthDaysCalendar($month);
+    }
+
+    public function dateInfo($date)
+    {
+        $date = Carbon::createFromFormat('Y-m-d', $date);
+        return $this->taskLogRepo->getDateInfo($date);
     }
 }
