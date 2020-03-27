@@ -12,6 +12,7 @@
             </div>
             <div class="col-auto">
                 <button class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-secondary" @click="cancel" :disabled="cancelDisabled">Cancel</button>
             </div>
         </div>
     </form>
@@ -50,6 +51,9 @@ export default {
         errors() {
             return this.$store.getters.taskLogErrors;
         },
+        cancelDisabled() {
+            return this.formattedDuration === '' && this.description === '' && this.date === null;
+        },
     },
     data() {
         return {
@@ -65,6 +69,9 @@ export default {
     methods: {
         saveTaskLogForm() {
             this.$store.dispatch('saveTaskLogForm');
+        },
+        cancel() {
+            this.$store.dispatch('resetTaskLogForm');
         },
     },
     components: {

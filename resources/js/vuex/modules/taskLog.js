@@ -85,6 +85,9 @@ const actions = {
     revokeDeleteTaskLog({commit}) {
         commit('setToDeleteTaskLog', null);
     },
+    resetTaskLogForm({commit}) {
+        commit('setTaskLogForm', INITIAL_TASK_LOG_FORM);
+    },
     setTaskLogFormDescription({commit}, payload) {
         commit('setTaskLogForm', {
             description: payload,
