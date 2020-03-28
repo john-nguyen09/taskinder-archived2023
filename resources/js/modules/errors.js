@@ -1,3 +1,5 @@
+export const ERROR_MESSAGE_FIELD = 'errorMessage';
+
 export default class Errors {
     /**
      * Create a new Errors instance.
@@ -16,6 +18,9 @@ export default class Errors {
         return this.errors.hasOwnProperty(field);
     }
 
+    hasErrorMessage() {
+        return this.has(ERROR_MESSAGE_FIELD);
+    }
 
     /**
      * Determine if we have any errors.
@@ -36,6 +41,12 @@ export default class Errors {
         }
     }
 
+    getErrorMessage() {
+        if (this.errors[ERROR_MESSAGE_FIELD]) {
+            return this.errors[ERROR_MESSAGE_FIELD];
+        }
+    }
+
 
     /**
      * Record the new errors.
@@ -44,6 +55,24 @@ export default class Errors {
      */
     record(errors) {
         this.errors = errors;
+    }
+
+    handle(payload) {
+        this.clear();
+        if (payload.response) {
+            if (payload.response.data.errors) {
+                this.record(payload.response.data.errors);
+            }
+            if (payload.response.data.message) {
+                this.record({
+                    [ERROR_MESSAGE_FIELD]: payload.response.data.message,
+                });
+            }
+        } else {
+            this.record({
+                [ERROR_MESSAGE_FIELD]: 'Unknown error',
+            });
+        }
     }
 
 

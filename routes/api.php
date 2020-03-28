@@ -18,15 +18,24 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::middleware('auth:api')->get('/users', function (Request $request) {
-    return response()->json(['name' => $request->user()->fullName]);
+Route::group(['middleware' => 'auth:api', 'prefix' => 'taskLog'], function() {
+    Route::get('/', 'TaskLogController@list');
+    Route::post('/save', 'TaskLogController@store');
+    Route::delete('/delete', 'TaskLogController@delete');
+
+    Route::get('/monthCalendar/{month}', 'TaskLogController@monthCalendar');
+    Route::get('/dateInfo/{date}', 'TaskLogController@dateInfo');
 });
 
-Route::group(['middleware' => 'auth:api'], function() {
-    Route::get('/taskLog', 'TaskLogController@list');
-    Route::post('/taskLog/save', 'TaskLogController@store');
-    Route::delete('/taskLog/delete', 'TaskLogController@delete');
+Route::group(['middleware' => 'auth:api', 'prefix' => 'qa'], function() {
+    Route::get('/', 'QAController@list');
+    Route::get('/formData', 'QAController@formData');
+    Route::post('/store', 'QAController@store');
+    Route::delete('/delete', 'QAController@delete');
+});
 
-    Route::get('/taskLog/monthCalendar/{month}', 'TaskLogController@monthCalendar');
-    Route::get('/taskLog/dateInfo/{date}', 'TaskLogController@dateInfo');
+Route::group(['middleware' => 'auth:api', 'prefix' => 'client'], function() {
+    Route::get('/', 'ClientController@list');
+    Route::post('/store', 'ClientController@store');
+    Route::delete('/delete', 'ClientController@delete');
 });

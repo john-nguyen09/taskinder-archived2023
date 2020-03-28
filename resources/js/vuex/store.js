@@ -5,6 +5,8 @@ import user from './modules/user'
 import auth from './modules/auth'
 import taskLog from './modules/taskLog';
 import month from './modules/month';
+import qa from './modules/qa';
+import client from './modules/client';
 
 Vue.use(Vuex);
 
@@ -14,5 +16,7 @@ export const store = new Vuex.Store({
         auth,
         taskLog,
         month,
+        qa,
+        client,
     },
 });

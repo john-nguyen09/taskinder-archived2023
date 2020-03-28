@@ -75,7 +75,7 @@ const actions = {
                     commit('deleteTaskLog', payload);
                 }
             } catch(err) {
-                commit('taskLogError', err.response.data);
+                commit('errors', err);
             }
             commit('setToDeleteTaskLog', null);
             return;
@@ -109,9 +109,8 @@ const mutations = {
     setIsRequesting(state, payload) {
         state.isRequesting = payload;
     },
-    taskLogError(state, payload) {
-        const errors = payload.errors ? payload.errors : {};
-        state.errors.record(errors);
+    errors(state, payload) {
+        state.errors.handle(payload);
     },
     setTaskLogs(state, payload) {
         state.taskLogs = payload;

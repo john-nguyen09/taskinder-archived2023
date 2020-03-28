@@ -21,7 +21,7 @@
                     @click="deleteTaskLog(index)"
                     @blur="revokeDelete(index)"
                 >
-                    <i class="fa fa-times delete-icon"></i><span class="delete-text"> Delete</span>
+                    <i class="fa fa-trash delete-icon"></i><span class="delete-text"> Delete</span>
                 </button>
             </div>
         </div>

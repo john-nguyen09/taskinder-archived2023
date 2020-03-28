@@ -55,7 +55,18 @@ export const routes = [
                 path: '/manage-passport',
                 name: 'manage-passport',
                 component: () => import('../components/manage_passport')
-            }
+            },
+
+            {
+                path: '/client',
+                name: 'clientDashboard',
+                component: () => import('../components/client'),
+            },
+            {
+                path: '/qa',
+                name: 'qaDashboard',
+                component: () => import('../components/qa'),
+            },
         ]
     },
 ];

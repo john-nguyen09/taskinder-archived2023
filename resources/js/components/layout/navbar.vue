@@ -25,6 +25,22 @@
                         <a :href="href" class="nav-link" @click="navigate">Home</a>
                     </li>
                 </router-link>
+                <router-link to="/client" v-slot="{ href, route, navigate, isActive, isExactActive }">
+                    <li
+                        class="nav-item"
+                        :class="[isExactActive && 'active']"
+                    >
+                        <a :href="href" class="nav-link" @click="navigate">Client</a>
+                    </li>
+                </router-link>
+                <router-link to="/qa" v-slot="{ href, route, navigate, isActive, isExactActive }">
+                    <li
+                        class="nav-item"
+                        :class="[isExactActive && 'active']"
+                    >
+                        <a :href="href" class="nav-link" @click="navigate">QA</a>
+                    </li>
+                </router-link>
                 <router-link to="/manage-passport" v-slot="{ href, route, navigate, isActive, isExactActive }">
                     <li
                         class="nav-item"
