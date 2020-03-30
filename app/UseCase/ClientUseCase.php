@@ -11,6 +11,11 @@ class ClientUseCase
         return Client::all();
     }
 
+    public function view($id)
+    {
+        return Client::findOrFail($id);
+    }
+
     public function store($data)
     {
         if (!empty($data['id'])) {

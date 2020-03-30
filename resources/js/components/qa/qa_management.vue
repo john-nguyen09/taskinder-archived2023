@@ -1,5 +1,6 @@
 <template>
     <div class="container-fluid mt-3">
+        <h1>{{qaClient.name}}</h1>
         <div class="alert alert-danger" v-if="errors.hasErrorMessage()">
             {{errors.getErrorMessage()}}
         </div>
@@ -8,15 +9,6 @@
             <div class="card-body">
                 <form @submit.prevent="store">
                     <div class="form-row">
-                        <div class="col-auto">
-                            <select class="form-control" :class="{ 'is-invalid': errors.has('client_id') }" v-model="clientId">
-                                <option
-                                    v-for="client in qaForm.clients"
-                                    :key="client.id"
-                                    :value="client.id"
-                                >{{client.name}}</option>
-                            </select>
-                        </div>
                         <div class="col-auto">
                             <input
                                 type="text"
@@ -46,19 +38,22 @@
             </div>
         </div>
 
+        <div class="d-flex mb-2">
+            <button type="button" class="btn btn-primary" @click="exportQAs">Export CSV</button>
+        </div>
         <div class="card mb-4">
             <div class="card-body">
                 <div class="row border-bottom p-1 font-weight-bold">
-                    <div class="col-2">Client</div>
-                    <div class="col-2">Question</div>
+                    <div class="col-1">#</div>
+                    <div class="col-3">Question</div>
                     <div class="col-5">Answer</div>
                 </div>
                 <div v-if="qas.length === 0" class="row p-1 border-top">
                     <div class="col-12">No QAs</div>
                 </div>
                 <div class="row p-1 border-top" v-for="(qa, index) in qas" :key="qa.id">
-                    <div class="col-2">{{qa.client.name}}</div>
-                    <div class="col-2">{{qa.question}}</div>
+                    <div class="col-1">{{index + 1}}</div>
+                    <div class="col-3">{{qa.question}}</div>
                     <div class="col-5" v-html="qa.answer_html"></div>
                     <div class="col-3">
                         <button type="button" class="btn btn-warning" @click="edit(index)"><i class="fa fa-pencil-alt"></i></button>
@@ -79,19 +74,10 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
+
 export default {
     computed: {
-        qaForm() {
-            return this.$store.getters.qaForm;
-        },
-        clientId: {
-            get() {
-                return this.$store.getters.qaForm.clientId;
-            },
-            set(value) {
-                this.$store.dispatch('setQAFormClientId', value);
-            },
-        },
         question: {
             get() {
                 return this.$store.getters.qaForm.question;
@@ -111,15 +97,14 @@ export default {
         cancelDisabled() {
             return this.question === '' && this.answer === '';
         },
-        qas() {
-            return this.$store.getters.qas;
-        },
-        toDeleteQA() {
-            return this.$store.getters.toDeleteQA;
-        },
         errors() {
             return this.$store.getters.qaErrors;
         },
+        ...mapGetters([
+            'qaClient',
+            'qas',
+            'toDeleteQA',
+        ]),
     },
     methods: {
         store() {
@@ -137,10 +122,13 @@ export default {
         revokeDelete(index) {
             this.$store.dispatch('revokeDeleteQA', index);
         },
+        exportQAs() {
+            this.$store.dispatch('exportQAs');
+        },
     },
-    mounted() {
-        this.$store.dispatch('fetchQAs');
-        this.$store.dispatch('fetchQAFormData');
+    async mounted() {
+        this.$store.dispatch('setQAFormClientId', this.$route.params.id);
+        await this.$store.dispatch('fetchQAs', this.$route.params.id);
     },
 }
 </script>

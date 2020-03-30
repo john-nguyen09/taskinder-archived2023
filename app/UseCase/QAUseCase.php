@@ -6,6 +6,7 @@ use App\QA;
 use App\Question;
 use App\Support\Output;
 use App\Client;
+use Response;
 
 class QAUseCase
 {
@@ -19,18 +20,10 @@ class QAUseCase
         $this->output = $output;
     }
 
-    public function list()
+    public function list($id)
     {
-        return QA::with([
-            'client'
-        ])->get();
-    }
-
-    public function formData()
-    {
-        return [
-            'clients' => Client::get(),
-        ];
+        return Client::findOrFail($id)
+            ->load('qas');
     }
 
     public function storeQA($data)
@@ -62,5 +55,35 @@ class QAUseCase
     {
         $qa = QA::findOrFail($data['id']);
         $qa->delete();
+    }
+
+    public function exportCSV($id)
+    {
+        $headers = [
+            'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+            'Content-type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename=galleries.csv',
+            'Expires' => '0',
+            'Pragma' => 'public',
+        ];
+        $qas = QA::where('client_id', '=', $id)->get();
+        $callback = function() use ($qas) {
+            $handle = fopen('php://output', 'w');
+            $headers = [
+                'question',
+                'answer',
+                'answer_html',
+            ];
+            fputcsv($handle, $headers);
+            foreach ($qas as $qa) {
+                fputcsv($handle, [
+                    'question' => $qa->question,
+                    'answer' => $qa->answer,
+                    'answer_html' => $qa->answer_html,
+                ]);
+            }
+            fclose($handle);
+        };
+        return Response::stream($callback, 200, $headers);
     }
 }

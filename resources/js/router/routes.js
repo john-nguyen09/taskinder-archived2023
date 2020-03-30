@@ -62,11 +62,23 @@ export const routes = [
                 name: 'clientDashboard',
                 component: () => import('../components/client'),
             },
-            {
-                path: '/qa',
-                name: 'qaDashboard',
-                component: () => import('../components/qa'),
-            },
         ]
+    },
+    {
+        path: '/qa',
+        component: () => import('../components/layout/layout'),
+        beforeEnter: ifAuthenticated,
+        children: [
+            {
+                path: '',
+                name: 'qaClientSelector',
+                component: () => import('../components/qa/qa_client_selector'),
+            },
+            {
+                path: ':id',
+                name: 'qaManagement',
+                component: () => import('../components/qa/qa_management'),
+            },
+        ],
     },
 ];

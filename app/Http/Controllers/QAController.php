@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\UseCase\QAUseCase;
 use App\Http\Requests\CreateQARequest;
 use App\Http\Requests\DeleteQARequest;
+use Illuminate\Http\Request;
 
 class QAController extends Controller
 {
@@ -18,14 +19,9 @@ class QAController extends Controller
         $this->qaUseCase = $qaUseCase;
     }
 
-    public function list()
+    public function list($id)
     {
-        return $this->qaUseCase->list();
-    }
-
-    public function formData()
-    {
-        return $this->qaUseCase->formData();
+        return $this->qaUseCase->list($id);
     }
 
     public function store(CreateQARequest $request)
@@ -39,5 +35,13 @@ class QAController extends Controller
         return [
             'status' => 'deleted',
         ];
+    }
+
+    public function exportCSV(Request $request)
+    {
+        $data = $request->validate([
+            'id' => 'required|integer',
+        ]);
+        return $this->qaUseCase->exportCSV($data['id']);
     }
 }

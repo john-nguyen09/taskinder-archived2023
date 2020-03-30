@@ -28,14 +28,15 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'taskLog'], function() {
 });
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'qa'], function() {
-    Route::get('/', 'QAController@list');
-    Route::get('/formData', 'QAController@formData');
+    Route::get('/{id}', 'QAController@list')->where('id', '[0-9]+');
     Route::post('/store', 'QAController@store');
     Route::delete('/delete', 'QAController@delete');
+    Route::post('/exportCSV', 'QAController@exportCSV');
 });
 
 Route::group(['middleware' => 'auth:api', 'prefix' => 'client'], function() {
     Route::get('/', 'ClientController@list');
+    Route::get('/{id}', 'ClientController@view')->where('id', '[0-9]+');
     Route::post('/store', 'ClientController@store');
     Route::delete('/delete', 'ClientController@delete');
 });

@@ -1,9 +1,10 @@
 import Errors from "../../modules/errors";
+import Vue from "vue";
+import fileDownload from "js-file-download";
 
 const INITIAL_QA_FORM = {
     id: 0,
     clientId: 0,
-    clients: [],
     question: '',
     answer: '',
 };
@@ -11,6 +12,7 @@ const INITIAL_QA_FORM = {
 const state = {
     isLoading: false,
     qaForm: { ...INITIAL_QA_FORM },
+    client: { id: 0, name: '' },
     qas: [],
     toDeleteQA: null,
     errors: new Errors(),
@@ -18,16 +20,17 @@ const state = {
 
 const getters = {
     qaForm: state => state.qaForm,
+    qaClient: state => state.client,
     qas: state => state.qas,
     toDeleteQA: state => state.toDeleteQA,
     qaErrors: state => state.errors,
 };
 
 const actions = {
-    async fetchQAs({commit}) {
+    async fetchQAs({commit}, payload) {
         commit('isLoading', true);
         try {
-            const response = await axios.get(`/api/qa/`);
+            const response = await axios.get(`/api/qa/${payload}`);
             commit('qas', response.data);
         } catch (err) {
             commit('errors', err);
@@ -47,19 +50,8 @@ const actions = {
         }
         commit('isLoading', false);
     },
-    async fetchQAFormData({commit, getters}) {
-        commit('isLoading', true);
-        try {
-            const response = await axios.get(`/api/qa/formData`);
-            commit('qaForm', Object.assign(getters.qaForm, response.data));
-        } catch (err) {
-            commit('errors', err);
-        }
-        commit('isLoading', false);
-    },
     resetQAForm({commit, getters}) {
         commit('qaForm', Object.assign({}, INITIAL_QA_FORM, {
-            clients: getters.qaForm.clients,
             clientId: getters.qaForm.clientId,
         }));
     },
@@ -104,6 +96,18 @@ const actions = {
     revokeDeleteQA({commit}) {
         commit('toDeleteQA', null);
     },
+    async exportQAs({commit, getters}) {
+        commit('isLoading', true);
+        try {
+            const response = await axios.post(`/api/qa/exportCSV`, {
+                id: getters.qaClient.id,
+            });
+            fileDownload(response.data, `${getters.qaClient.name}-qa.csv`);
+        } catch (err) {
+            commit('errors', err);
+        }
+        commit('isLoading', false);
+    },
 };
 
 const mutations = {
@@ -111,7 +115,8 @@ const mutations = {
         state.isLoading = payload;
     },
     qas(state, payload) {
-        state.qas = payload;
+        state.client = payload;
+        state.qas = payload.qas;
     },
     qaForm(state, payload) {
         state.qaForm = payload;

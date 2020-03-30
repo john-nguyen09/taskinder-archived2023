@@ -36,7 +36,7 @@
                 <router-link to="/qa" v-slot="{ href, route, navigate, isActive, isExactActive }">
                     <li
                         class="nav-item"
-                        :class="[isExactActive && 'active']"
+                        :class="[isActive && 'active', isExactActive && 'exact-active']"
                     >
                         <a :href="href" class="nav-link" @click="navigate">QA</a>
                     </li>
