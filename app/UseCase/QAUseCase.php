@@ -70,6 +70,7 @@ class QAUseCase
         $callback = function() use ($qas) {
             $handle = fopen('php://output', 'w');
             $headers = [
+                'qa_id',
                 'question',
                 'answer',
                 'answer_html',
@@ -77,6 +78,7 @@ class QAUseCase
             fputcsv($handle, $headers);
             foreach ($qas as $qa) {
                 fputcsv($handle, [
+                    'qa_id' => $qa->id,
                     'question' => $qa->question,
                     'answer' => $qa->answer,
                     'answer_html' => $qa->answer_html,
