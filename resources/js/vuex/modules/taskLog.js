@@ -78,9 +78,10 @@ const actions = {
                 commit('errors', err);
             }
             commit('setToDeleteTaskLog', null);
-            return;
+            return true;
         }
         commit('setToDeleteTaskLog', state.taskLogs[payload]);
+        return false;
     },
     revokeDeleteTaskLog({commit}) {
         commit('setToDeleteTaskLog', null);

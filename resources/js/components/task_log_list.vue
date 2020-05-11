@@ -16,12 +16,18 @@
                 <button type="button" class="btn btn-warning" @click="editTaskLog(index)"><i class="fa fa-pencil-alt"></i></button>
                 <button
                     type="button"
-                    class="btn btn-danger btn-confirm-delete"
-                    :class="{ 'to-confirm': toDeleteTaskLog && toDeleteTaskLog.id == taskLog.id }"
+                    class="btn btn-danger"
                     @click="deleteTaskLog(index)"
                     @blur="revokeDelete(index)"
                 >
-                    <i class="fa fa-trash delete-icon"></i><span class="delete-text"> Delete</span>
+                    <div class="float-left">
+                        <i class="fa fa-trash delete-icon"></i>
+                    </div>
+                    <transition name="slide-right">
+                        <div class="float-left pl-1" v-if="toDeleteTaskLog && toDeleteTaskLog.id == taskLog.id">
+                            <span>Delete</span>
+                        </div>
+                    </transition>
                 </button>
             </div>
         </div>
@@ -51,8 +57,12 @@ export default {
         editTaskLog(index) {
             this.$store.dispatch('editTaskLog', index);
         },
-        deleteTaskLog(index) {
-            this.$store.dispatch('deleteTaskLog', index);
+        async deleteTaskLog(index) {
+            const result = await this.$store.dispatch('deleteTaskLog', index);
+            if (result) {
+                await this.$store.dispatch('fetchMonthResults');
+                await this.$store.dispatch('fetchDateInfo', this.$store.getters.selectedDate);
+            }
         },
         revokeDelete(index) {
             this.$store.dispatch('revokeDeleteTaskLog', index);

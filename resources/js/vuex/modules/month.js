@@ -1,5 +1,6 @@
 import Errors from '../../modules/errors';
 import { toText } from '../../modules/timeParser';
+import { format } from 'date-fns';
 
 const INITIAL_MONTH = {
     highlight: {
@@ -17,11 +18,13 @@ const state = {
     ],
     selectedDateInfo: [],
     errors: new Errors(),
+    selectedDate: new Date(),
 };
 
 const getters = {
     monthResults: state => state.monthResults,
     monthSelectedDateInfo: state => state.selectedDateInfo,
+    selectedDate: state => state.selectedDate,
 };
 
 const actions = {
@@ -39,7 +42,8 @@ const actions = {
     async fetchDateInfo({commit}, payload) {
         commit('isLoading', true);
         try {
-            const response = await axios.get(`/api/taskLog/dateInfo/${payload}`);
+            commit('selectedDate', payload);
+            const response = await axios.get(`/api/taskLog/dateInfo/${format(payload, 'yyyy-MM-dd')}`);
             commit('selectedDateInfo', response.data);
         } catch (err) {
             commit('errors', err);
@@ -79,6 +83,9 @@ const mutations = {
             });
         }
         state.monthResults.push(loggedDays);
+    },
+    selectedDate(state, payload) {
+        state.selectedDate = payload;
     },
     selectedDateInfo(state, payload) {
         state.selectedDateInfo = payload;

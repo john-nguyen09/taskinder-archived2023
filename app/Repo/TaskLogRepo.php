@@ -28,6 +28,7 @@ class TaskLogRepo
 
     public function list(User $user)
     {
+        $user = $user->replicate();
         return $user->taskLogs;
     }
 

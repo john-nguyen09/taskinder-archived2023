@@ -24,6 +24,8 @@ mix
         targets: { "firefox": "50", "ie": 11 }
     });
 
+mix.sourceMaps(false, 'source-map');
+
 if (mix.inProduction()) {
     mix.version();
 }

@@ -68,7 +68,11 @@ export default {
     },
     methods: {
         saveTaskLogForm() {
-            this.$store.dispatch('saveTaskLogForm');
+            this.$store.dispatch('saveTaskLogForm')
+                .then(_ => {
+                    this.$store.dispatch('fetchMonthResults');
+                    this.$store.dispatch('fetchDateInfo', this.$store.getters.selectedDate);
+                });
         },
         cancel() {
             this.$store.dispatch('resetTaskLogForm');
