@@ -1,7 +1,7 @@
 <template>
     <div class="auth-form text-center">
         <form method="POST" v-on:submit.prevent="login">
-            <img class="mb-4" src="img/logo.svg" alt width="300" height="72" />
+            <h1>Taskinder</h1>
 
             <p
                 class="text-danger"
