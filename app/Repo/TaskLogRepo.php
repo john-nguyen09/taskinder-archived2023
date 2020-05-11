@@ -28,8 +28,7 @@ class TaskLogRepo
 
     public function list(User $user)
     {
-        $user = $user->replicate();
-        return $user->taskLogs;
+        return TaskLog::where('user_id', '=', $user->id)->get();
     }
 
     /**
