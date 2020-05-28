@@ -19,13 +19,13 @@ class MonthCalendarUseCase
         $this->taskLogRepo = $taskLogRepo;
     }
 
-    public function monthDaysCalendar($month)
+    public function monthDaysCalendar($user, $month)
     {
         $date = new Carbon();
         if ($month >= 1 && $month <= 12) {
             $date->setMonth($month);
         }
-        $taskLogs = $this->taskLogRepo->getMonthTaskLogs($date);
+        $taskLogs = $this->taskLogRepo->getMonthTaskLogs($user, $date);
         $daysInMonth = $date->daysInMonth;
         
         /**

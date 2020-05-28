@@ -8,6 +8,7 @@ use App\Http\Requests\DeleteTaskLog;
 use App\UseCase\MonthCalendarUseCase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
+use Illuminate\Http\Request;
 
 class TaskLogController extends Controller
 {
@@ -63,9 +64,9 @@ class TaskLogController extends Controller
         ];
     }
 
-    public function monthCalendar($month)
+    public function monthCalendar(Request $request, $month)
     {
-        return $this->useCase->monthDaysCalendar($month);
+        return $this->useCase->monthDaysCalendar($request->user(), $month);
     }
 
     public function dateInfo($date)

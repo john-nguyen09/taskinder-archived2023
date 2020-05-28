@@ -34,7 +34,7 @@ class TaskLogRepo
     /**
      * @param Carbon $date
      */
-    public function getMonthTaskLogs($date)
+    public function getMonthTaskLogs($user, $date)
     {
         $begin = (clone $date)
             ->modify('first day of this month')
@@ -43,7 +43,8 @@ class TaskLogRepo
             ->modify('last day of this month')
             ->setTime(23, 59, 59);
 
-        return TaskLog::where('date', '>=', $begin)
+        return $user->taskLogs()
+            ->where('date', '>=', $begin)
             ->where('date', '<=', $end)
             ->get();
     }
