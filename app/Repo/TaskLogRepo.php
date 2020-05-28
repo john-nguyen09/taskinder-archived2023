@@ -49,12 +49,13 @@ class TaskLogRepo
             ->get();
     }
 
-    public function getDateInfo(Carbon $date)
+    public function getDateInfo($user, Carbon $date)
     {
         $begin = (clone $date)->setTime(0, 0, 0);
         $end = (clone $date)->setTime(23, 59, 59);
 
-        return TaskLog::where('date', '>=', $begin)
+        return $user->taskLogs()
+            ->where('date', '>=', $begin)
             ->where('date', '<=', $end)
             ->get();
     }

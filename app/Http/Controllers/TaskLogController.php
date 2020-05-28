@@ -69,9 +69,9 @@ class TaskLogController extends Controller
         return $this->useCase->monthDaysCalendar($request->user(), $month);
     }
 
-    public function dateInfo($date)
+    public function dateInfo(Request $request, $date)
     {
         $date = Carbon::createFromFormat('Y-m-d', $date);
-        return $this->taskLogRepo->getDateInfo($date);
+        return $this->taskLogRepo->getDateInfo($request->user(), $date);
     }
 }
