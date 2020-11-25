@@ -488,7 +488,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_12__["mapGetters"])(['monthResults', 'monthSelectedDateInfo', 'toDeleteTaskLog'])),
+  computed: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_12__["mapGetters"])(['monthResultsWithSelected', 'monthSelectedDateInfo', 'toDeleteTaskLog'])),
   mounted: function mounted() {
     this.$store.dispatch('fetchDateInfo', new Date());
   },
@@ -927,7 +927,10 @@ var render = function() {
       { staticClass: "col-4" },
       [
         _c("v-calendar", {
-          attrs: { "is-expanded": "", attributes: _vm.monthResults },
+          attrs: {
+            "is-expanded": "",
+            attributes: _vm.monthResultsWithSelected
+          },
           on: { dayclick: _vm.selectDate, "update:from-page": _vm.pageChange }
         })
       ],

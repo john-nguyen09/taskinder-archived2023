@@ -23,6 +23,19 @@ const state = {
 
 const getters = {
     monthResults: state => state.monthResults,
+    monthResultsWithSelected: state => {
+        const results = [
+            ...state.monthResults,
+        ];
+        results.push({
+            dates: state.selectedDate,
+            highlight: {
+                color: 'blue',
+                fillMode: 'light',
+            },
+        });
+        return results;
+    },
     monthSelectedDateInfo: state => state.selectedDateInfo,
     selectedDate: state => state.selectedDate,
 };

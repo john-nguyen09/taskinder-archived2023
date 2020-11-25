@@ -3,7 +3,7 @@
         <div class="col-4">
             <v-calendar
                 is-expanded
-                :attributes="monthResults"
+                :attributes="monthResultsWithSelected"
                 @dayclick="selectDate"
                 @update:from-page="pageChange"
             ></v-calendar>
@@ -47,7 +47,7 @@ import { toText } from '../modules/timeParser';
 export default {
     computed: {
         ...mapGetters([
-            'monthResults',
+            'monthResultsWithSelected',
             'monthSelectedDateInfo',
             'toDeleteTaskLog',
         ]),
