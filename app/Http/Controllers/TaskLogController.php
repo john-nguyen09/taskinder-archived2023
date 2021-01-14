@@ -64,9 +64,9 @@ class TaskLogController extends Controller
         ];
     }
 
-    public function monthCalendar(Request $request, $month)
+    public function monthCalendar(Request $request, $year, $month)
     {
-        return $this->useCase->monthDaysCalendar($request->user(), $month);
+        return $this->useCase->monthDaysCalendar($request->user(), $year, $month);
     }
 
     public function dateInfo(Request $request, $date)

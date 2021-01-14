@@ -44,8 +44,9 @@ const actions = {
     async fetchMonthResults({commit, state}) {
         commit('isLoading', true);
         try {
+            const year = state.currentMonth.getFullYear();
             const month = state.currentMonth.getMonth() + 1;
-            const response = await axios.get(`/api/taskLog/monthCalendar/${month}`);
+            const response = await axios.get(`/api/taskLog/monthCalendar/${year}-${month}`);
             commit('monthResults', response.data);
         } catch (err) {
             commit('errors', err);

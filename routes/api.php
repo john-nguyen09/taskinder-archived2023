@@ -23,7 +23,7 @@ Route::group(['middleware' => 'auth:api', 'prefix' => 'taskLog'], function() {
     Route::post('/save', 'TaskLogController@store');
     Route::delete('/delete', 'TaskLogController@delete');
 
-    Route::get('/monthCalendar/{month}', 'TaskLogController@monthCalendar');
+    Route::get('/monthCalendar/{year}-{month}', 'TaskLogController@monthCalendar');
     Route::get('/dateInfo/{date}', 'TaskLogController@dateInfo');
 });
 
