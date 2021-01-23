@@ -13,7 +13,7 @@
     "devDependencies": {
         "@babel/compat-data": "^7.12.7",
         "@fortawesome/fontawesome-free": "^5.12.1",
-        "axios": "^0.19",
+        "axios": "^0.21",
         "bootstrap": "^4.4.1",
         "clean-webpack-plugin": "^3.0.0",
         "cross-env": "^7.0",
