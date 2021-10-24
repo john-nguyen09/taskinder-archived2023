@@ -30,9 +30,10 @@ class TaskLogController extends Controller
         $this->useCase = $useCase;
     }
 
-    public function list()
+    public function list(Request $request)
     {
-        return $this->taskLogRepo->list(Auth::user());
+        $search = $request->input('search');
+        return $this->taskLogRepo->list(Auth::user(), $search);
     }
 
     public function view($id)

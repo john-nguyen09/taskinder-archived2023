@@ -15,11 +15,14 @@ const state = {
     taskLogForm: { ...INITIAL_TASK_LOG_FORM },
     toDeleteTaskLog: null,
     taskLogs: [],
+    taskLogLinks: [],
     errors: new Errors(),
 };
 
 const getters = {
     taskLogs: state => state.taskLogs,
+    taskLogLinks: state => state.taskLogLinks,
+    isRequesting: state => state.isRequesting,
     taskLogForm: state => state.taskLogForm,
     toDeleteTaskLog: state => state.toDeleteTaskLog,
     taskLogErrors: state => state.errors,
@@ -36,10 +39,15 @@ function prepareTaskLogForm(taskLog) {
 }
 
 const actions = {
-    async fetchTaskLogs({commit}) {
+    async fetchTaskLogs({commit}, { url, search } = {}) {
         commit('setIsRequesting', true);
-        const response = await axios.get('/api/taskLog');
-        commit('setTaskLogs', response.data);
+        const response = await axios.get(url || '/api/taskLog', {
+            params: {
+                search,
+            },
+        });
+        commit('setTaskLogLinks', response.data.links);
+        commit('setTaskLogs', response.data.data);
         commit('setIsRequesting', false);
     },
     async saveTaskLogForm({state, commit}) {
@@ -115,6 +123,9 @@ const mutations = {
     },
     setTaskLogs(state, payload) {
         state.taskLogs = payload;
+    },
+    setTaskLogLinks(state, payload) {
+        state.taskLogLinks = payload;
     },
     saveTaskLog(state, payload) {
         for (const [i, taskLog] of state.taskLogs.entries()) {

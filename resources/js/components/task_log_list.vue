@@ -1,5 +1,29 @@
 <template>
     <div>
+        <div class="mb-3">
+            <form class="form-inline">
+                <input
+                    type="text"
+                    class="form-control"
+                    ref="searchTasks"
+                    placeholder="Search tasks"
+                    v-model="searchTaskKeywords"
+                >
+                <button
+                    type="submit"
+                    class="btn btn-danger"
+                    @click.prevent="clearSearchTasks"
+                    :disabled="searchTaskKeywords == ''"
+                >Clear</button>
+            </form>
+        </div>
+        <pagination
+            v-if="taskLogLinks"
+            aria-label="Task log navigation"
+            :links="taskLogLinks"
+            @link="goToLink"
+            class="mb-3"
+        />
         <div class="row border-bottom p-1 font-weight-bold">
             <div class="col-3">Description</div>
             <div class="col-3">Date</div>
@@ -31,13 +55,37 @@
                 </button>
             </div>
         </div>
+        <pagination
+            v-if="taskLogLinks"
+            aria-label="Task log navigation"
+            :links="taskLogLinks"
+            @link="goToLink"
+            class="mt-3"
+        />
+        <div v-if="isRequesting" class="overlay-spinner">
+            <div class="spinner-border text-primary mx-auto" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import { toText } from '../modules/timeParser';
+import pagination from './layout/pagination';
+import { debounce } from '../utils/debounce';
 
 export default {
+    components: {
+        pagination,
+    },
+    data()  {
+        return {
+            searchTaskKeywords: '',
+            currentFetchUrl: null,
+        };
+    },
     computed: {
         taskLogs() {
             const taskLogs = [];
@@ -52,6 +100,10 @@ export default {
         toDeleteTaskLog() {
             return this.$store.getters.toDeleteTaskLog;
         },
+        ...mapGetters([
+            'taskLogLinks',
+            'isRequesting',
+        ]),
     },
     methods: {
         editTaskLog(index) {
@@ -60,16 +112,45 @@ export default {
         async deleteTaskLog(index) {
             const result = await this.$store.dispatch('deleteTaskLog', index);
             if (result) {
-                await this.$store.dispatch('fetchMonthResults');
-                await this.$store.dispatch('fetchDateInfo', this.$store.getters.selectedDate);
+                await Promise.all([
+                    this.$store.dispatch('fetchMonthResults'),
+                    this.$store.dispatch('fetchDateInfo', this.$store.getters.selectedDate)
+                ]);
             }
         },
         revokeDelete(index) {
             this.$store.dispatch('revokeDeleteTaskLog', index);
         },
+        isLinkDisabled(link) {
+            return !link.url;
+        },
+        goToLink(link) {
+            if (!link.url) {
+                return;
+            }
+            this.currentFetchUrl = link.url;
+            this.$store.dispatch('fetchTaskLogs', {
+                url: link.url,
+                search: this.searchTaskKeywords,
+            });
+        },
+        searchTasks: debounce(function(value) {
+            this.$store.dispatch('fetchTaskLogs', {
+                url: this.currentFetchUrl,
+                search: value,
+            });
+        }, 300),
+        clearSearchTasks() {
+            this.searchTaskKeywords = '';
+        },
     },
     mounted() {
         this.$store.dispatch('fetchTaskLogs');
+    },
+    watch: {
+        searchTaskKeywords(value) {
+            this.searchTasks(value);
+        },
     },
 }
 </script>

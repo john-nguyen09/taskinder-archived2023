@@ -26,9 +26,14 @@ class TaskLogRepo
         return TaskLog::find($id);
     }
 
-    public function list(User $user)
+    public function list(User $user, $search = null)
     {
-        return TaskLog::where('user_id', '=', $user->id)->get();
+        $query = TaskLog::where('user_id', '=', $user->id)
+            ->orderBy('date', 'DESC');
+        if (!empty($search)) {
+            $query->search($search);
+        }
+        return $query->paginate(100);
     }
 
     /**
