@@ -9,6 +9,7 @@ use App\UseCase\MonthCalendarUseCase;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Carbon;
 use Illuminate\Http\Request;
+use App\Http\Resources\TaskLogResource;
 
 class TaskLogController extends Controller
 {
@@ -52,7 +53,7 @@ class TaskLogController extends Controller
             $data['user_id'] = Auth::user()->id;
             $taskLog = $this->taskLogRepo->create($data);
         }
-        return $taskLog;
+        return (new TaskLogResource($taskLog))->jsonSerialize();
     }
 
     public function delete(DeleteTaskLog $req)

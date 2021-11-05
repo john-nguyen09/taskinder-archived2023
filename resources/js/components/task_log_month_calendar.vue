@@ -8,13 +8,13 @@
                 @update:from-page="pageChange"
             ></v-calendar>
         </div>
-        <div class="col-auto">
-            <div v-for="(day, index) in monthSelectedDateInfo" :key="index" class="m-1">
+        <div class="col-auto pr-1">
+            <div v-for="(day, index) in monthSelectedDateInfo" :key="index" class="my-1 day-task">
                 {{formatDate(day.date)}}: {{day.description}} {{toText(day.duration)}} <br />
             </div>
         </div>
-        <div class="col-auto">
-            <div v-for="day in monthSelectedDateInfo" :key="day.id" class="m-1">
+        <div class="col-auto pl-0">
+            <div v-for="day in monthSelectedDateInfo" :key="day.id" class="my-1">
                 <button type="button" class="btn btn-warning py-0 px-1" @click="editTaskLog(day.id)">
                     <i class="fa fa-pencil-alt"></i>
                 </button>

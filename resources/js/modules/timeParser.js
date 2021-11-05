@@ -152,6 +152,10 @@ export class TimeParser {
                 this.state.minutes += this.getNumber(numberToken);
                 return;
             case TokenType.End:
+                if (this.state.hours) {
+                    this.state.minutes += this.getNumber(numberToken);
+                    return;
+                }
                 this.transformHours(this.getNumber(numberToken));
                 return;
             case TokenType.Unknown:
